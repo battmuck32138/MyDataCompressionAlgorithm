@@ -4,8 +4,7 @@ import java.util.Map;
 
 
 /**
- * This program reads in a text file, compresses it using a trie data structure
- * and writes the compressed version to a .huf file.
+ * This program compresses files in a manner similar to zipfiles.
  */
 public class HuffmanEncoder {
 
@@ -23,13 +22,12 @@ public class HuffmanEncoder {
                 frequencyTable.put(c, counts[i]);
             }
         }
-
         return frequencyTable;
     }
 
 
     /** Utility method for HuffmanEncoder. */
-    public static char[] readFile(String filename) {
+    private static char[] readFile(String filename) {
         BinaryIn in = new BinaryIn(filename);
         ArrayList<Character> chars = new ArrayList<>();
 
@@ -48,7 +46,7 @@ public class HuffmanEncoder {
 
 
     /** Utility method for HuffmanDecoder. */
-    public static void writeCharArray(String filename, char[] chars) {
+    private static void writeCharArray(String filename, char[] chars) {
         BinaryOut out = new BinaryOut(filename);
 
         for (char c : chars) {
@@ -77,17 +75,17 @@ public class HuffmanEncoder {
         //6: Use binary trie to create lookup table for encoding.
         Map<Character, BitSequence> lookUPTable = bt1.buildLookupTable();
 
-        //7: Create a list of bitsequences.
+        //7: Create a list of bit-sequences.
         ArrayList<BitSequence> bitSequences = new ArrayList<>();
 
         /*
-        8: For each 8 bit symbol:
+        8: For each 8 bit symbol in the original file:
         Lookup that symbol in the lookup table.
-        Add the appropriate bit sequence to the list of bitsequences.
+        Add the appropriate bit sequence to the list of bit-sequences.
         */
-
-        for (BitSequence bitSeq : lookUPTable.values()) {
-            bitSequences.add(bitSeq);
+        for (char c : in) {
+            BitSequence b = lookUPTable.get(c);
+            bitSequences.add(b);
         }
 
         //9: Assemble all bit sequences into one huge bit sequence.
@@ -95,18 +93,9 @@ public class HuffmanEncoder {
 
         //10: Write the huge bit sequence to the .huf file.
         ow.writeObject(masterSequence);
-
-
-        //Prints out the all characters contained in the original file and their counts.
-        for (char key : frequencyTable.keySet()) {
-            System.out.println("(" + key + ", " + frequencyTable.get(key) + ")");
-        }
-        System.out.println();
     }
 
 
-
 }
-
 
 

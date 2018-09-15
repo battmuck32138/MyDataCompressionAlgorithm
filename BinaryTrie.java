@@ -1,12 +1,9 @@
-
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Trie data structure
- * Author Matt Buck
- */
+
+
 public class BinaryTrie implements Serializable {
 
     // alphabet size of extended ASCII
@@ -14,7 +11,6 @@ public class BinaryTrie implements Serializable {
     private Node trie;
     private Map<Character, BitSequence> encodingMap = new HashMap<>();
     private static final long serialVersionUID = 138816335349L;
-
 
     public BinaryTrie(Map<Character, Integer> frequencyTable) {
         // initialize priority queue with singleton trees
@@ -30,9 +26,9 @@ public class BinaryTrie implements Serializable {
         if (pq.size() == 1) {
             if (frequencyTable.size() == 1) {
                 pq.insert(new Node('\0', 0, null, null));
+
             } else         {
                 pq.insert(new Node('\1', 0, null, null));
-
             }
         }
 
@@ -60,18 +56,16 @@ public class BinaryTrie implements Serializable {
             if (bit == 0) {
                 current = current.left;
                 nextBit = "0";
-
             } else {
                 current = current.right;
                 nextBit = "1";
-
             }
+
             seq += nextBit;
 
             if (current == null) {
                 return match;
             }
-
 
             if (current.isLeaf()) {
                 BitSequence matchSeq = new BitSequence(seq);
@@ -81,6 +75,8 @@ public class BinaryTrie implements Serializable {
 
         return match;
     }
+
+
 
 
     public Map<Character, BitSequence> buildLookupTable() {
@@ -93,26 +89,25 @@ public class BinaryTrie implements Serializable {
     //Performs a pre-order depth-first traversal of the trie adding
     // a 0 when visiting left children and a 1 for right children.
     private void buildCode(Node x, String s) {
-
         if (!x.isLeaf()) {
             buildCode(x.left,  s + '0');
             buildCode(x.right, s + '1');
-
         } else {
             BitSequence bs = new BitSequence(s);
             encodingMap.put(x.ch, bs);
         }
     }
 
-
     public int getR() {
         return R;
     }
 
 
+
     /*******************************************************************************
      * Helper Class
      *******************************************************************************/
+
 
     // Huffman trie node
     private static class Node implements Comparable<Node>, Serializable {
@@ -138,12 +133,9 @@ public class BinaryTrie implements Serializable {
         public int compareTo(Node that) {
             return this.freq - that.freq;
         }
+
     }
 
-
 }
-
-
-
 
 
